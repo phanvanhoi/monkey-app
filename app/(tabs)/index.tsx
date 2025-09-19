@@ -1,19 +1,27 @@
 import FeaturedCard from "@/components/FeaturedCard";
 import SectionHeader from "@/components/SectionHeader";
 import StoryCard from "@/components/StoryCard";
+import Header from "@/components/ui/Header";
 import UpdateRow from "@/components/UpdateRow";
 import { colors, spacing } from "@/constants/theme";
 import { featured, latestUpdates, trendingMonth } from "@/data/mock";
 import { RootStackParamList } from "@/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Image } from "expo-image";
 import React, { useCallback } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 import ParallaxScrollView from "@/components/ParallaxScrollView";
+import { useOptionalAppTheme } from "@/contexts/ThemeContext";
+import { useColorScheme } from "react-native";
+
 export default function HomeScreen({
   navigation,
 }: NativeStackScreenProps<RootStackParamList, "Home">) {
+  const optionalTheme = useOptionalAppTheme();
+  const ctxTheme = optionalTheme?.theme;
+  const fallback = useColorScheme();
+  const colorScheme = ctxTheme ?? fallback ?? "light";
+
   const goTo = useCallback(
     (id: string) => {
       navigation.navigate("StoryDetail", { id });
@@ -24,12 +32,7 @@ export default function HomeScreen({
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
+      headerImage={<Header />}
     >
       {/* Đề cử hôm nay */}
       <SectionHeader title="Đề cử hôm nay" onPressMore={() => {}} />
