@@ -1,8 +1,10 @@
 import { ThemeProvider, useOptionalAppTheme } from "@/contexts/ThemeContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { setBasicAuth } from "@/utils/api";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import "react-native-reanimated";
 
 function InnerAppContent() {
@@ -10,6 +12,11 @@ function InnerAppContent() {
   const ctxTheme = optionalTheme?.theme;
   const fallback = useColorScheme();
   const scheme = ctxTheme ?? fallback ?? "light";
+
+  useEffect(() => {
+    // chỉ dùng cho dev/test — không commit credentials vào repo
+    setBasicAuth("admin@admin.vn", "Admin@1235!!");
+  }, []);
 
   return (
     <>
