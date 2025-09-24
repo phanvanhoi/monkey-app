@@ -1,16 +1,30 @@
+import { Colors } from "@/constants/Colors";
+import { useOptionalAppTheme } from "@/contexts/ThemeContext";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
-import { colors, radius, spacing } from "../constants/theme";
+import { Image, Pressable, Text, View, useColorScheme } from "react-native";
+import { radius, spacing } from "../constants/theme";
+
+type FeaturedCardProps = {
+  title: string;
+  cover: string;
+  author?: string;
+  onPress?: () => void;
+};
 
 export default function FeaturedCard({
   title,
   cover,
+  author,
   onPress,
-}: {
-  title: string;
-  cover: string;
-  onPress?: () => void;
-}) {
+}: FeaturedCardProps) {
+  const optionalTheme = useOptionalAppTheme();
+  const ctxTheme = optionalTheme?.theme;
+  const fallback = useColorScheme();
+  const scheme = ctxTheme ?? fallback ?? "light";
+
+  // Chọn màu theo theme
+  const themeColors = Colors[scheme] ?? Colors.light;
+
   return (
     <Pressable
       onPress={onPress}
@@ -20,7 +34,7 @@ export default function FeaturedCard({
         style={{
           borderRadius: radius.lg,
           overflow: "hidden",
-          backgroundColor: colors.surface,
+          backgroundColor: themeColors.surface,
         }}
       >
         <Image
@@ -31,10 +45,22 @@ export default function FeaturedCard({
         <View style={{ padding: spacing.md }}>
           <Text
             numberOfLines={2}
-            style={{ color: colors.text, fontSize: 16, fontWeight: "700" }}
+            style={{ color: themeColors.text, fontSize: 16, fontWeight: "700" }}
           >
             {title}
           </Text>
+          {author ? (
+            <Text
+              numberOfLines={1}
+              style={{
+                color: themeColors.subtle,
+                fontSize: 13,
+                marginTop: 4,
+              }}
+            >
+              {author}
+            </Text>
+          ) : null}
         </View>
       </View>
     </Pressable>

@@ -1,31 +1,27 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./api";
 
-const ACCESS_KEY = "auth_token";
-const REFRESH_KEY = "refresh_token";
+const TOKEN_KEY = "auth_token";
 
-export async function setAuthTokens({
-  accessToken,
-  refreshToken,
-}: {
-  accessToken: string;
-  refreshToken?: string;
-}) {
-  if (accessToken) await AsyncStorage.setItem(ACCESS_KEY, accessToken);
-  if (refreshToken) await AsyncStorage.setItem(REFRESH_KEY, refreshToken);
+/**
+ * Lưu token sau khi login
+ */
+export async function setAuthToken(token: string) {
+  await AsyncStorage.setItem(TOKEN_KEY, token);
 }
 
-export async function clearAuthTokens() {
-  await AsyncStorage.removeItem(ACCESS_KEY);
-  await AsyncStorage.removeItem(REFRESH_KEY);
+/**
+ * Xóa token khi logout
+ */
+export async function clearAuthToken() {
+  await AsyncStorage.removeItem(TOKEN_KEY);
 }
 
+/**
+ * Lấy token để dùng cho axios
+ */
 export async function getAuthToken() {
-  return AsyncStorage.getItem(ACCESS_KEY);
-}
-
-export async function getRefreshToken() {
-  return AsyncStorage.getItem(REFRESH_KEY);
+  return AsyncStorage.getItem(TOKEN_KEY);
 }
 
 /**
@@ -48,7 +44,7 @@ export async function loginWithCredentials({
     const refreshToken = data.refreshToken ?? data.refresh_token;
 
     if (accessToken) {
-      await setAuthTokens({ accessToken, refreshToken });
+      await setAuthToken(accessToken);
       // Sau login, dùng token (api interceptor sẽ pick token từ AsyncStorage)
       // Nếu bạn muốn dùng Basic Auth thay vì token, có thể gọi setBasicAuth(username, password)
     }

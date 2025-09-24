@@ -1,6 +1,8 @@
+import { Colors } from "@/constants/Colors";
+import { useOptionalAppTheme } from "@/contexts/ThemeContext";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
-import { colors, radius, spacing } from "../constants/theme";
+import { Image, Pressable, Text, View, useColorScheme } from "react-native";
+import { radius, spacing } from "../constants/theme";
 
 export default function UpdateRow({
   title,
@@ -15,6 +17,14 @@ export default function UpdateRow({
   timeAgo?: string;
   onPress?: () => void;
 }) {
+  const optionalTheme = useOptionalAppTheme();
+  const ctxTheme = optionalTheme?.theme;
+  const fallback = useColorScheme();
+  const scheme = ctxTheme ?? fallback ?? "light";
+
+  // Chọn màu theo theme
+  const themeColors = Colors[scheme] ?? Colors.light;
+
   return (
     <Pressable
       onPress={onPress}
@@ -32,20 +42,22 @@ export default function UpdateRow({
       <View style={{ flex: 1 }}>
         <Text
           numberOfLines={2}
-          style={{ color: colors.text, fontSize: 14, fontWeight: "700" }}
+          style={{ color: themeColors.text, fontSize: 14, fontWeight: "700" }}
         >
           {title}
         </Text>
         {latestChapterTitle ? (
           <Text
             numberOfLines={1}
-            style={{ color: colors.subtle, fontSize: 12, marginTop: 4 }}
+            style={{ color: themeColors.subtle, fontSize: 12, marginTop: 4 }}
           >
             {latestChapterTitle}
           </Text>
         ) : null}
         {timeAgo ? (
-          <Text style={{ color: colors.subtle, fontSize: 12, marginTop: 2 }}>
+          <Text
+            style={{ color: themeColors.subtle, fontSize: 12, marginTop: 2 }}
+          >
             {timeAgo}
           </Text>
         ) : null}

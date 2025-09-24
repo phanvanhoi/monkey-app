@@ -1,10 +1,13 @@
 import { ThemeProvider, useOptionalAppTheme } from "@/contexts/ThemeContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { login } from "@/services";
 import { setBasicAuth } from "@/utils/api";
+import { setAuthToken } from "@/utils/auth";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+
 import "react-native-reanimated";
 
 function InnerAppContent() {
@@ -13,7 +16,18 @@ function InnerAppContent() {
   const fallback = useColorScheme();
   const scheme = ctxTheme ?? fallback ?? "light";
 
+  const callAPI = async () => {
+    try {
+      const resp = await login("admin@admin.vn", "Admin@1235!!");
+      const token = resp.data?.token;
+      if (token) await setAuthToken(token);
+    } catch (error) {
+      console.error("Error calling API:", error);
+    }
+  };
+
   useEffect(() => {
+    callAPI();
     // chỉ dùng cho dev/test — không commit credentials vào repo
     setBasicAuth("admin@admin.vn", "Admin@1235!!");
   }, []);

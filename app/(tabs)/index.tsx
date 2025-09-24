@@ -1,18 +1,16 @@
 import FeaturedCard from "@/components/FeaturedCard";
+import ParallaxScrollView from "@/components/ParallaxScrollView";
 import SectionHeader from "@/components/SectionHeader";
 import StoryCard from "@/components/StoryCard";
 import Header from "@/components/ui/Header";
 import UpdateRow from "@/components/UpdateRow";
 import { colors, spacing } from "@/constants/theme";
-import { featured, latestUpdates, trendingMonth } from "@/data/mock";
+import { useOptionalAppTheme } from "@/contexts/ThemeContext";
+import { getStoryList } from "@/services"; // import API
 import { RootStackParamList } from "@/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useCallback } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
-
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { useOptionalAppTheme } from "@/contexts/ThemeContext";
-import { useColorScheme } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { FlatList, StyleSheet, Text, View, useColorScheme } from "react-native";
 
 export default function HomeScreen({
   navigation,
@@ -22,12 +20,47 @@ export default function HomeScreen({
   const fallback = useColorScheme();
   const colorScheme = ctxTheme ?? fallback ?? "light";
 
+  const [featured, setFeatured] = useState<any[]>([]);
+  const [trendingMonth, setTrendingMonth] = useState<any[]>([]);
+  const [latestUpdates, setLatestUpdates] = useState<any[]>([]);
+
   const goTo = useCallback(
     (id: string) => {
       navigation.navigate("StoryDetail", { id });
     },
     [navigation]
   );
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const params = {
+          size: 10,
+          page: 1,
+          ordering: "daily_watched",
+        };
+        const resp = await getStoryList(params);
+        const results = resp.data?.results ?? [];
+        // Map dữ liệu cho từng section nếu cần
+        setFeatured(results);
+        setTrendingMonth(results);
+        setLatestUpdates(results);
+      } catch (err) {
+        console.warn("getStoryList error", err);
+      }
+    })();
+  }, []);
+
+  const featuredListRef = useRef<FlatList>(null);
+
+  useEffect(() => {
+    if (featured.length > 1) {
+      const timer = setTimeout(() => {
+        featuredListRef.current?.scrollToIndex({ index: 1, animated: true });
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [featured]);
 
   return (
     <ParallaxScrollView
@@ -37,16 +70,18 @@ export default function HomeScreen({
       {/* Đề cử hôm nay */}
       <SectionHeader title="Đề cử hôm nay" onPressMore={() => {}} />
       <FlatList
+        ref={featuredListRef}
         data={featured}
-        keyExtractor={(it) => it.id}
+        keyExtractor={(it) => it.id?.toString?.() ?? `${it.id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ paddingHorizontal: spacing.md }}
+        style={{ paddingHorizontal: spacing.xs }}
         contentContainerStyle={{ paddingBottom: spacing.md }}
         renderItem={({ item }) => (
           <FeaturedCard
-            title={item.title}
-            cover={item.cover}
+            title={item.name}
+            cover={item.avatar}
+            author={item.author}
             onPress={() => goTo(item.id)}
           />
         )}
@@ -56,17 +91,18 @@ export default function HomeScreen({
       <SectionHeader title="Truyện Hot Tháng Này" onPressMore={() => {}} />
       <FlatList
         data={trendingMonth}
-        keyExtractor={(it) => it.id}
+        keyExtractor={(it) => it.id?.toString?.() ?? `${it.id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ paddingHorizontal: spacing.md }}
+        style={{ paddingHorizontal: spacing.xs }}
         contentContainerStyle={{ paddingBottom: spacing.md }}
         renderItem={({ item }) => (
           <StoryCard
-            title={item.title}
-            cover={item.cover}
-            views={item.views}
-            chapters={item.chapters}
+            title={item.name}
+            cover={item.avatar}
+            views={item.statistics?.total_watched}
+            chapters={item.last_chapter?.chapter_number}
+            author={item.author}
             onPress={() => goTo(item.id)}
           />
         )}
@@ -78,10 +114,13 @@ export default function HomeScreen({
         {latestUpdates.map((item) => (
           <UpdateRow
             key={item.id}
-            title={item.title}
-            cover={item.cover}
-            latestChapterTitle={item.latestChapterTitle}
-            timeAgo={item.timeAgo}
+            title={item.name}
+            cover={item.avatar}
+            latestChapterTitle={
+              item.last_chapter?.name ||
+              `Chương ${item.last_chapter?.chapter_number ?? ""}`
+            }
+            timeAgo={item.modification_time}
             onPress={() => goTo(item.id)}
           />
         ))}

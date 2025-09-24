@@ -1,6 +1,8 @@
+import { Colors } from "@/constants/Colors";
+import { useOptionalAppTheme } from "@/contexts/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View, useColorScheme } from "react-native";
 import { colors, radius, spacing } from "../constants/theme";
 
 export default function StoryCard({
@@ -8,6 +10,7 @@ export default function StoryCard({
   cover,
   views,
   chapters,
+  author,
   isFull,
   onPress,
 }: {
@@ -15,9 +18,19 @@ export default function StoryCard({
   cover: string;
   views?: number;
   chapters?: number;
+  author?: string;
   isFull?: boolean;
   onPress?: () => void;
 }) {
+  const optionalTheme = useOptionalAppTheme();
+  const ctxTheme = optionalTheme?.theme;
+  const fallback = useColorScheme();
+  const scheme = ctxTheme ?? fallback ?? "light";
+
+  // Chọn màu theo theme
+  const themeColors = Colors[scheme] ?? Colors.light;
+  console.log("colors", colors, scheme, themeColors);
+
   return (
     <Pressable
       onPress={onPress}
@@ -27,7 +40,7 @@ export default function StoryCard({
         style={{
           borderRadius: radius.md,
           overflow: "hidden",
-          backgroundColor: colors.surface,
+          backgroundColor: themeColors?.surface,
         }}
       >
         <View>
@@ -42,13 +55,19 @@ export default function StoryCard({
                 position: "absolute",
                 top: 8,
                 right: 8,
-                backgroundColor: "#0ea5e9",
+                backgroundColor: themeColors?.tint,
                 paddingHorizontal: 6,
                 paddingVertical: 3,
                 borderRadius: 6,
               }}
             >
-              <Text style={{ color: "white", fontSize: 10, fontWeight: "700" }}>
+              <Text
+                style={{
+                  color: themeColors?.onTint,
+                  fontSize: 10,
+                  fontWeight: "700",
+                }}
+              >
                 FULL
               </Text>
             </View>
@@ -58,7 +77,7 @@ export default function StoryCard({
           <Text
             numberOfLines={2}
             style={{
-              color: colors.text,
+              color: themeColors?.text,
               fontSize: 13,
               fontWeight: "700",
               minHeight: 36,
@@ -66,6 +85,18 @@ export default function StoryCard({
           >
             {title}
           </Text>
+          {author ? (
+            <Text
+              numberOfLines={1}
+              style={{
+                color: themeColors?.subtle,
+                fontSize: 12,
+                marginTop: 2,
+              }}
+            >
+              {author}
+            </Text>
+          ) : null}
           <View
             style={{
               flexDirection: "row",
@@ -76,9 +107,17 @@ export default function StoryCard({
           >
             {typeof views === "number" ? (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons name="eye-outline" size={14} color={colors.subtle} />
+                <Ionicons
+                  name="eye-outline"
+                  size={14}
+                  color={themeColors?.subtle}
+                />
                 <Text
-                  style={{ color: colors.subtle, fontSize: 12, marginLeft: 4 }}
+                  style={{
+                    color: themeColors?.subtle,
+                    fontSize: 12,
+                    marginLeft: 4,
+                  }}
                 >
                   {views.toLocaleString("vi-VN")}
                 </Text>
@@ -89,10 +128,14 @@ export default function StoryCard({
                 <Ionicons
                   name="bookmark-outline"
                   size={14}
-                  color={colors.subtle}
+                  color={themeColors?.subtle}
                 />
                 <Text
-                  style={{ color: colors.subtle, fontSize: 12, marginLeft: 4 }}
+                  style={{
+                    color: themeColors?.subtle,
+                    fontSize: 12,
+                    marginLeft: 4,
+                  }}
                 >
                   {chapters}
                 </Text>
