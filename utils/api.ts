@@ -1,5 +1,4 @@
 import axios, { AxiosInstance } from "axios";
-import { Buffer } from "buffer";
 import Constants from "expo-constants";
 import { setupInterceptors } from "./apiInterceptors";
 
@@ -20,11 +19,8 @@ setupInterceptors(api, BASE_URL);
 /**
  * Thiết lập Basic Authorization header cho mọi request (username:password)
  */
-export function setBasicAuth(username: string, password: string) {
+export function setBasicAuth(token: string) {
   try {
-    const token = Buffer.from(`${username}:${password}`, "utf8").toString(
-      "base64"
-    );
     api.defaults.headers.common = api.defaults.headers.common ?? {};
     api.defaults.headers.common["Authorization"] = `Basic ${token}`;
   } catch (e) {

@@ -9,6 +9,7 @@ import { useOptionalAppTheme } from "@/contexts/ThemeContext";
 import { getStoryList } from "@/services"; // import API
 import { RootStackParamList } from "@/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, StyleSheet, Text, View, useColorScheme } from "react-native";
 
@@ -24,11 +25,13 @@ export default function HomeScreen({
   const [trendingMonth, setTrendingMonth] = useState<any[]>([]);
   const [latestUpdates, setLatestUpdates] = useState<any[]>([]);
 
+  const router = useRouter();
+
   const goTo = useCallback(
-    (id: string) => {
-      navigation.navigate("StoryDetail", { id });
+    (slug: string) => {
+      router.push(`/${slug}`);
     },
-    [navigation]
+    [router]
   );
 
   useEffect(() => {
@@ -82,7 +85,7 @@ export default function HomeScreen({
             title={item.name}
             cover={item.avatar}
             author={item.author}
-            onPress={() => goTo(item.id)}
+            onPress={() => goTo(item.slug)}
           />
         )}
       />
@@ -103,7 +106,7 @@ export default function HomeScreen({
             views={item.statistics?.total_watched}
             chapters={item.last_chapter?.chapter_number}
             author={item.author}
-            onPress={() => goTo(item.id)}
+            onPress={() => goTo(item.slug)}
           />
         )}
       />
@@ -113,7 +116,7 @@ export default function HomeScreen({
       <View style={{ paddingVertical: spacing.sm }}>
         {latestUpdates.map((item) => (
           <UpdateRow
-            key={item.id}
+            key={item.slug}
             title={item.name}
             cover={item.avatar}
             latestChapterTitle={
@@ -121,7 +124,7 @@ export default function HomeScreen({
               `Chương ${item.last_chapter?.chapter_number ?? ""}`
             }
             timeAgo={item.modification_time}
-            onPress={() => goTo(item.id)}
+            onPress={() => goTo(item.slug)}
           />
         ))}
       </View>

@@ -1,7 +1,6 @@
 import { ThemeProvider, useOptionalAppTheme } from "@/contexts/ThemeContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { login } from "@/services";
-import { setBasicAuth } from "@/utils/api";
 import { setAuthToken } from "@/utils/auth";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -28,8 +27,6 @@ function InnerAppContent() {
 
   useEffect(() => {
     callAPI();
-    // chỉ dùng cho dev/test — không commit credentials vào repo
-    setBasicAuth("admin@admin.vn", "Admin@1235!!");
   }, []);
 
   return (
