@@ -1,0 +1,740 @@
+{
+	"info": {
+		"_postman_id": "75fc0383-fe27-4418-abdb-c13ac18702de",
+		"name": "MonkeyApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47941683",
+		"_collection_link": "https://sboxcenter.postman.co/workspace/9c91653d-f76f-4e36-8c8d-40c11e852f19/collection/47941683-75fc0383-fe27-4418-abdb-c13ac18702de?action=share&source=collection_link&creator=47941683"
+	},
+	"item": [
+		{
+			"name": "team",
+			"item": [
+				{
+					"name": "detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/teams/hoan-team",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"teams",
+								"hoan-team"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/hoannq/Pictures/Avatar-den-trang-avatar-den-trang-buon.jpg"
+								},
+								{
+									"key": "name",
+									"value": "Hoan team1133aa",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "hoan",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/teams?size=2&page=1",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"teams"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"if (responseCode.code == 200) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", \"Token \"+ jsonData[\"token\"]);\r",
+									"    postman.setEnvironmentVariable(\"user-id\", jsonData[\"user\"][\"id\"]);\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"admin@admin.vn\",\r\n    \"password\":\"Admin@1235!!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/auth/logout",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"if (responseCode.code == 200) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", \"Token \"+ jsonData[\"token\"]);\r",
+									"    postman.setEnvironmentVariable(\"user-id\", jsonData[\"user\"][\"id\"]);\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/users",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"if (responseCode.code == 200) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", \"Token \"+ jsonData[\"token\"]);\r",
+									"    postman.setEnvironmentVariable(\"user-id\", jsonData[\"user\"][\"id\"]);\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/users/{{user-id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"users",
+								"{{user-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"if (responseCode.code == 200) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", \"Token \"+ jsonData[\"token\"]);\r",
+									"    postman.setEnvironmentVariable(\"user-id\", jsonData[\"user\"][\"id\"]);\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"hoannq95@gmail.com\",\r\n    \"fullname\":\"Nguyễn Quốc Hoàn\",\r\n    \"password\":\"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/users/register",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users verify-otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"if (responseCode.code == 200) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", \"Token \"+ jsonData[\"token\"]);\r",
+									"    postman.setEnvironmentVariable(\"user-id\", jsonData[\"user\"][\"id\"]);\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"hoannq95@gmail.com\",\r\n    \"otp\":\"270385\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/users/register/verify-otp",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"users",
+								"register",
+								"verify-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users retry-otp",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"if (responseCode.code == 200) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", \"Token \"+ jsonData[\"token\"]);\r",
+									"    postman.setEnvironmentVariable(\"user-id\", jsonData[\"user\"][\"id\"]);\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"hoannq95@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/users/create-otp",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"users",
+								"create-otp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users forgot-password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;\r",
+									"\r",
+									"if (responseCode.code == 200) {\r",
+									"    var jsonData = JSON.parse(responseBody);\r",
+									"    postman.setEnvironmentVariable(\"auth_token\", \"Token \"+ jsonData[\"token\"]);\r",
+									"    postman.setEnvironmentVariable(\"user-id\", jsonData[\"user\"][\"id\"]);\r",
+									"    \r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"hoannq95@gmail.com\",\r\n    \"otp\":\"\",\r\n    \"password\":123456\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/users/forgot-password",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"users",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/category/bach-hop",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"category",
+								"bach-hop"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/hoannq/Pictures/Avatar-den-trang-avatar-den-trang-buon.jpg"
+								},
+								{
+									"key": "name",
+									"value": "Hoan team1133aa",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "hoan",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/category?size=2&page=1",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"category"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "story",
+			"item": [
+				{
+					"name": "detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/story/khong-lam-hoang-hau-nua",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"story",
+								"khong-lam-hoang-hau-nua"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/hoannq/Pictures/Avatar-den-trang-avatar-den-trang-buon.jpg"
+								},
+								{
+									"key": "name",
+									"value": "Hoan team1133aa",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "hoan",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/story?size=2&page=1&status=finish",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"story"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "status",
+									"value": "finish"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "chapter",
+			"item": [
+				{
+					"name": "detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/story/khong-lam-hoang-hau-nua",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"story",
+								"khong-lam-hoang-hau-nua"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/hoannq/Pictures/Avatar-den-trang-avatar-den-trang-buon.jpg"
+								},
+								{
+									"key": "name",
+									"value": "Hoan team1133aa",
+									"type": "text"
+								},
+								{
+									"key": "slug",
+									"value": "hoan",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/story/khong-lam-hoang-hau-nua/chapter",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"story",
+								"khong-lam-hoang-hau-nua",
+								"chapter"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Images",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/images/team/1719912445_2021-09-06.png",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"images",
+						"team",
+						"1719912445_2021-09-06.png"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
